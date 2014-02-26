@@ -2,6 +2,15 @@ package com.compare.xml;
 
 public enum XmlElements {
 
-	NAME,VALUE,ATTRIBUTES;
+	NAME("NAME"),VALUE("VALUE"),ATTRIBUTES("ATTRIBUTES");
+	private String value;
+	
+	private XmlElements(String val){
+		this.value = val;
+	}
+	
+	public String getValue(){
+		return this.value;
+	}
 	
 }

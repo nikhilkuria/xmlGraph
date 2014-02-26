@@ -17,6 +17,9 @@ public class XmlElement {
 		this.tagName = tagName;
 	}
 	public String getTagValue() {
+		if(tagValue==null){
+			return "";
+		}
 		return tagValue;
 	}
 	public void setTagValue(String tagValue) {

@@ -1,6 +1,8 @@
 package com.compare.parse;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -11,6 +13,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import com.compare.parse.component.HierarchyIdentifier;
 import com.compare.parse.component.XmlElement;
 import com.compare.parse.component.XmlParseStack;
+import com.compare.persist.GraphPersistanceFacade;
 
 public class SaxHandler extends DefaultHandler{
 
@@ -18,9 +21,14 @@ public class SaxHandler extends DefaultHandler{
 	private int depth;
 	private int width;
 	
+	private List<XmlElement> elements = new ArrayList<XmlElement>();
+	
 	@Override
 	public void endDocument() throws SAXException {
+		GraphPersistanceFacade graphFacade = new GraphPersistanceFacade();
 		LOGGER.info("Completed XML parsing--------------------------------");
+		graphFacade.saveXmlElements(elements);
+		LOGGER.info("Completed Converting elements to map--------------------------------");
 		super.endDocument();
 	}
 
@@ -28,7 +36,8 @@ public class SaxHandler extends DefaultHandler{
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		XmlElement element = XmlParseStack.getStack().pop();
-		LOGGER.info("Popping from Stack : " + element.getTagName());
+		this.elements.add(element);
+		//LOGGER.info("Popping from Stack : " + element.getTagName());
 		this.depth--;
 		this.width++;
 		super.endElement(uri, localName, qName);
@@ -48,7 +57,7 @@ public class SaxHandler extends DefaultHandler{
 		this.depth++;
 		XmlElement element = createElement(localName,qName,attributes);
 		XmlParseStack.getStack().push(element);
-		LOGGER.info("Pushing to Stack : " + element.getTagName());
+		//LOGGER.info("Pushing to Stack : " + element.getTagName());
 		super.startElement(uri, localName, qName, attributes);
 	}
 
@@ -56,7 +65,8 @@ public class SaxHandler extends DefaultHandler{
 	public void characters(char[] ch, int start, int length) throws SAXException {		
 		super.characters(ch, start, length);
 		XmlElement element = XmlParseStack.getStack().pop();
-		element.setTagValue(new String(ch, start, length));
+		String tagValue = new String(ch, start, length);
+		element.setTagValue(tagValue);
 		XmlParseStack.getStack().push(element);
 	}
 
