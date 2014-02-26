@@ -25,8 +25,7 @@ public class GraphWriter {
 		for (List<XmlElement> slicedElement : slicedList) {
 			LOGGER.info("Writing a piece");
 		try ( Transaction tx = graphDb.beginTx() )
-		{
-			
+		{		
 
 			for (XmlElement element : slicedElement) {	
 				count++;
@@ -34,7 +33,9 @@ public class GraphWriter {
 			    Node node = graphDb.createNode();
 			    node.setProperty(XmlElements.NAME.getValue(), element.getTagName());
 			    node.setProperty(XmlElements.VALUE.getValue(), element.getTagValue());
-			    //node.setProperty(XmlElements.ATTRIBUTES.getValue(), (Object)element.getAttributes());
+			    node.setProperty(XmlElements.PARENT.getValue(), element.getParentId());
+			    node.setProperty(XmlElements.ID.getValue(), element.getHierarchyIdentifier().getId());
+			    node.setProperty(XmlElements.ATTRIBUTES.getValue(), element.getAtrributeString());
 			    tx.success();
 			}
 		}

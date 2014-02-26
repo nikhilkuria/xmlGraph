@@ -4,6 +4,7 @@ public class HierarchyIdentifier {
 
 	private int depth;
 	private int width;
+	private int id;
 	
 	public int getDepth() {
 		return depth;
@@ -16,6 +17,12 @@ public class HierarchyIdentifier {
 	}
 	public void setWidth(int width) {
 		this.width = width;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	

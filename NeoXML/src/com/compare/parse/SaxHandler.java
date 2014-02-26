@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.logging.Logger;
 
 import org.xml.sax.Attributes;
@@ -23,6 +24,7 @@ public class SaxHandler extends DefaultHandler{
 	
 	private List<XmlElement> elements = new ArrayList<XmlElement>();
 	
+	
 	@Override
 	public void endDocument() throws SAXException {
 		GraphPersistanceFacade graphFacade = new GraphPersistanceFacade();
@@ -35,7 +37,18 @@ public class SaxHandler extends DefaultHandler{
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
-		XmlElement element = XmlParseStack.getStack().pop();
+		Stack<XmlElement> stack = XmlParseStack.getStack();
+		int parentId;
+		XmlElement element = stack.pop();
+		if(!stack.isEmpty()){
+			XmlElement parentElement = stack.pop();
+			parentId = parentElement.getHierarchyIdentifier().getId();
+			stack.push(parentElement);
+		}else{
+			parentId =0;
+		}			
+		element.setParentId(parentId);
+		
 		this.elements.add(element);
 		//LOGGER.info("Popping from Stack : " + element.getTagName());
 		this.depth--;
@@ -75,8 +88,10 @@ public class SaxHandler extends DefaultHandler{
 		XmlElement element = new XmlElement();
 		Map<String, String> attributeMap = new HashMap<String,String>();
 		HierarchyIdentifier hierarchyIdentifier = new HierarchyIdentifier();
+		//TODO do we need a hierarchy identifier
 		hierarchyIdentifier.setDepth(depth);
 		hierarchyIdentifier.setWidth(width);
+		hierarchyIdentifier.setId(ParseHelper.getId());
 		element.setTagName(qName);
 		for (int i = 0; i < attributes.getLength(); i++) {
 			attributeMap.put(attributes.getQName(i), attributes.getValue(i));

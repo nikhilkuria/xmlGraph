@@ -2,7 +2,7 @@ package com.compare.xml;
 
 public enum XmlElements {
 
-	NAME("NAME"),VALUE("VALUE"),ATTRIBUTES("ATTRIBUTES");
+	NAME("NAME"),VALUE("VALUE"),ATTRIBUTES("ATTRIBUTES"),PARENT("PARENT"),ID("ID");
 	private String value;
 	
 	private XmlElements(String val){

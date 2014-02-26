@@ -9,6 +9,7 @@ public class XmlElement {
 	private String tagValue;
 	private Map<String, String> attributes = new HashMap<String,String>();
 	private HierarchyIdentifier hierarchyIdentifier;
+	private int parentId;
 	
 	public String getTagName() {
 		return tagName;
@@ -36,6 +37,15 @@ public class XmlElement {
 	}
 	public void setHierarchyIdentifier(HierarchyIdentifier hierarchyIdentifier) {
 		this.hierarchyIdentifier = hierarchyIdentifier;
+	}
+	public int getParentId() {
+		return parentId;
+	}
+	public void setParentId(int parentId) {
+		this.parentId = parentId;
+	}
+	public String getAtrributeString(){
+		return this.attributes.toString();
 	}
 	
 	
