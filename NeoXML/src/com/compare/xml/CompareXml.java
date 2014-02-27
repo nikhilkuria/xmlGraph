@@ -27,7 +27,7 @@ public class CompareXml {
 		initProperties();
 		SaxParser parser = new SaxParser();
 		
-		File xmlFile = new File("C:\\Temp\\allianz.xml");
+		File xmlFile = new File("/home/nikhil/dev/xml-sample/simple-tiny.xml");
 		parser.parse(xmlFile );
 		
 	}

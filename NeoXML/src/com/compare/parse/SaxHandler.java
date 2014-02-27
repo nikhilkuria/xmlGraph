@@ -22,14 +22,14 @@ public class SaxHandler extends DefaultHandler{
 	private int depth;
 	private int width;
 	
-	private List<XmlElement> elements = new ArrayList<XmlElement>();
+	private Map<Integer,XmlElement> elementsMap = new HashMap<Integer,XmlElement>();
 	
 	
 	@Override
 	public void endDocument() throws SAXException {
 		GraphPersistanceFacade graphFacade = new GraphPersistanceFacade();
 		LOGGER.info("Completed XML parsing--------------------------------");
-		graphFacade.saveXmlElements(elements);
+		graphFacade.saveXmlElements(elementsMap);
 		LOGGER.info("Completed Converting elements to map--------------------------------");
 		super.endDocument();
 	}
@@ -49,7 +49,7 @@ public class SaxHandler extends DefaultHandler{
 		}			
 		element.setParentId(parentId);
 		
-		this.elements.add(element);
+		this.elementsMap.put(element.getHierarchyIdentifier().getId(), element);
 		//LOGGER.info("Popping from Stack : " + element.getTagName());
 		this.depth--;
 		this.width++;

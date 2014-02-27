@@ -10,6 +10,7 @@ public class XmlElement {
 	private Map<String, String> attributes = new HashMap<String,String>();
 	private HierarchyIdentifier hierarchyIdentifier;
 	private int parentId;
+	private boolean persisted;
 	
 	public String getTagName() {
 		return tagName;
@@ -49,6 +50,12 @@ public class XmlElement {
 	}
 	public boolean isParent(){
 		return getParentId() == 0?true :false;
+	}
+	public boolean isPersisted() {
+		return persisted;
+	}
+	public void setPersisted(boolean persisted) {
+		this.persisted = persisted;
 	}
 	
 	
