@@ -47,6 +47,9 @@ public class XmlElement {
 	public String getAtrributeString(){
 		return this.attributes.toString();
 	}
+	public boolean isParent(){
+		return getParentId() == 0?true :false;
+	}
 	
 	
 }

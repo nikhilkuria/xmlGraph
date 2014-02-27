@@ -17,9 +17,9 @@ public class Neo4jDatabaseHandler {
 	
 	public static GraphDatabaseService getGraphDatabase(){
 		if(graphdb==null){
-			GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(getDatabaseLocation());
-			registerShutdownHook( graphDb );
-			return graphDb;
+			Neo4jDatabaseHandler.graphdb = new GraphDatabaseFactory().newEmbeddedDatabase(getDatabaseLocation());
+			registerShutdownHook( graphdb );
+			return Neo4jDatabaseHandler.graphdb;
 		}else{
 			return graphdb;
 		}

@@ -10,6 +10,7 @@ public class GraphPersistanceFacade {
 	public void saveXmlElements(List<XmlElement> elements){
 		GraphWriter writer = new GraphWriter();
 		writer.writeXmlElements(elements);
+		writer.writeRelationships(elements);
 	}
 	
 }

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 
@@ -29,18 +31,42 @@ public class GraphWriter {
 
 			for (XmlElement element : slicedElement) {	
 				count++;
-				//LOGGER.info("Processing "+count+" out of "+elements.size());
+				LOGGER.info("Processing "+count+" out of "+elements.size());
 			    Node node = graphDb.createNode();
-			    node.setProperty(XmlElements.NAME.getValue(), element.getTagName());
+			    Label label = DynamicLabel.label(element.getTagName());
+			    if(element.getParentId()==0){
+			    	node.addLabel(Neo4jHelper.XmlLabels.PARENT);
+			    }
+			    node.addLabel(Neo4jHelper.XmlLabels.NODE);
+			    node.addLabel(label);
 			    node.setProperty(XmlElements.VALUE.getValue(), element.getTagValue());
 			    node.setProperty(XmlElements.PARENT.getValue(), element.getParentId());
 			    node.setProperty(XmlElements.ID.getValue(), element.getHierarchyIdentifier().getId());
 			    node.setProperty(XmlElements.ATTRIBUTES.getValue(), element.getAtrributeString());
-			    tx.success();
+			    
 			}
+			tx.success();
 		}
 		
 	}
+		
+	}
+	
+	public void writeRelationships(List<XmlElement> elements){
+		GraphDatabaseService graphDb = Neo4jDatabaseHandler.getGraphDatabase();
+		LOGGER.info("Creating Relationships for "+elements.size()+" nodes");
+		try ( Transaction tx = graphDb.beginTx() ){
+			for (XmlElement element : elements) {
+				if(!element.isParent()){
+					Node node = graphDb.findNodesByLabelAndProperty(Neo4jHelper.XmlLabels.NODE, XmlElements.ID.getValue(), element.getHierarchyIdentifier().getId()).iterator().next();
+					Node parentNode = graphDb.findNodesByLabelAndProperty(Neo4jHelper.XmlLabels.NODE, XmlElements.ID.getValue(), element.getParentId()).iterator().next();
+					node.createRelationshipTo(parentNode, Neo4jHelper.RelationshipTypes.CHILD_OF);
+				}
+
+			}
+			tx.success();
+		}
+		LOGGER.info("Completed creating Relationships");
 		
 	}
 
