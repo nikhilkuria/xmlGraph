@@ -2,6 +2,7 @@ package com.compare.persist.neo4j;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -25,24 +26,34 @@ public class GraphWriter {
 		GraphDatabaseService graphDb = Neo4jDatabaseHandler.getGraphDatabase();
 		Collection<XmlElement> elements = elementsMap.values();
 		int size = elements.size();
+		//TODO purpose is lost if this map grows to a monster
+		Map<Integer,Long> xmlElementMapping = new HashMap<Integer, Long>();
 		List<List<XmlElement>> slicedList = sliceList(elements);
 		LOGGER.info("Sliced into "+ slicedList.size()+" pieces");
 		for (List<XmlElement> slicedElement : slicedList) {
 			try ( Transaction tx = graphDb.beginTx() )
 			{		
 				for (XmlElement element : slicedElement) {	
-					XmlElement mapElement = elementsMap.get(element.getHierarchyIdentifier().getId());
+					int id = element.getHierarchyIdentifier().getId();
+					XmlElement mapElement = elementsMap.get(id);
 					if (!mapElement.isPersisted()) {
 						count++;
 						LOGGER.info("Processing " + count + " out of " + size);
 						Node node = graphDb.createNode();
+						xmlElementMapping.put(id, node.getId());
 						mapElement
 								.setPersisted(true);
 						setNodeProperties(element, node);
 						if (!element.isParent()) {
+							Node parentNode;
 							XmlElement parentElement = elementsMap.get(element
 									.getParentId());
-							Node parentNode = graphDb.createNode();
+							if(parentElement.isPersisted()){
+								LOGGER.info("Already persisted...");
+								parentNode = graphDb.getNodeById(xmlElementMapping.get(parentElement.getHierarchyIdentifier().getId()));
+							}else{
+								parentNode = graphDb.createNode();
+							}
 							setNodeProperties(parentElement, parentNode);
 							node.createRelationshipTo(parentNode,
 									Neo4jHelper.RelationshipTypes.CHILD_OF);
