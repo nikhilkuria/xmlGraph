@@ -7,7 +7,7 @@ import com.compare.persist.neo4j.GraphWriter;
 
 public class GraphPersistanceFacade {
 
-	public void saveXmlElements(Map<Integer,XmlElement> elementsMap){
+	public void saveXmlElements(Map<Integer,String> elementsMap){
 		GraphWriter writer = new GraphWriter();
 		writer.writeXmlElements(elementsMap);
 		//writer.writeRelationships(elementsMap);

@@ -14,47 +14,53 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 
 import com.compare.parse.SaxHandler;
-import com.compare.parse.component.XmlElement;
 import com.compare.xml.XmlElements;
 
 public class GraphWriter {
 	
 	private final static Logger LOGGER = Logger.getLogger(SaxHandler.class.getName());
 	
-	public void writeXmlElements(Map<Integer,XmlElement> elementsMap){
+	public void writeXmlElements(Map<Integer,String> elementsMap){
 		int count = 0;
 		GraphDatabaseService graphDb = Neo4jDatabaseHandler.getGraphDatabase();
-		Collection<XmlElement> elements = elementsMap.values();
+		Collection<String> elements = elementsMap.values();
 		int size = elements.size();
 		//TODO purpose is lost if this map grows to a monster
 		Map<Integer,Long> xmlElementMapping = new HashMap<Integer, Long>();
-		List<List<XmlElement>> slicedList = sliceList(elements);
+		Map<Integer,Boolean> xmlElementPersistedMap = new HashMap<Integer,Boolean>();
+		List<List<String>> slicedList = sliceList(elements);
 		LOGGER.info("Sliced into "+ slicedList.size()+" pieces");
-		for (List<XmlElement> slicedElement : slicedList) {
+		for (List<String> slicedElement : slicedList) {
 			try ( Transaction tx = graphDb.beginTx() )
 			{		
-				for (XmlElement element : slicedElement) {	
-					int id = element.getHierarchyIdentifier().getId();
-					XmlElement mapElement = elementsMap.get(id);
-					if (!mapElement.isPersisted()) {
+				for (String element : slicedElement) {	
+					//int id = element.getHierarchyIdentifier().getId();
+					String [] elementSplit = element.split("~");
+					int elementID = Integer.valueOf(elementSplit[0]);
+					String mapElement = elementsMap.get(elementID);
+					if (!isElementPersisted(xmlElementPersistedMap, elementID)  ) {
 						count++;
 						LOGGER.info("Processing " + count + " out of " + size);
 						Node node = graphDb.createNode();
-						xmlElementMapping.put(id, node.getId());
-						mapElement
-								.setPersisted(true);
-						setNodeProperties(element, node);
-						if (!element.isParent()) {
+						xmlElementMapping.put(elementID, node.getId());
+						/*mapElement
+								.setPersisted(true);*/
+						xmlElementPersistedMap.put(elementID, true);
+						setNodeProperties(elementSplit, node);
+						if (!isElementParent(elementSplit)) {
 							Node parentNode;
-							XmlElement parentElement = elementsMap.get(element
-									.getParentId());
-							if(parentElement.isPersisted()){
+							String parentElement = elementsMap.get(Integer.valueOf(elementSplit[5]));
+							String [] parentElementSplit = parentElement.split("~");
+							int parentId = Integer.valueOf(parentElementSplit[0]);
+							if(isElementPersisted(xmlElementPersistedMap, parentId)){
 								LOGGER.info("Already persisted...");
-								parentNode = graphDb.getNodeById(xmlElementMapping.get(parentElement.getHierarchyIdentifier().getId()));
+								
+								parentNode = graphDb.getNodeById(xmlElementMapping.get(parentId));
 							}else{
 								parentNode = graphDb.createNode();
 							}
-							setNodeProperties(parentElement, parentNode);
+							
+							setNodeProperties(parentElementSplit, parentNode);
 							node.createRelationshipTo(parentNode,
 									Neo4jHelper.RelationshipTypes.CHILD_OF);
 						}
@@ -66,48 +72,42 @@ public class GraphWriter {
 		
 	}
 
-	private void setNodeProperties(XmlElement element, Node node) {
-		Label label = DynamicLabel.label(element.getTagName());
-		if(element.isParent()){
+	private boolean isElementPersisted(
+			Map<Integer, Boolean> xmlElementPersistedMap, int id) {
+		if(xmlElementPersistedMap.get(id)==null){
+			return false;
+		}
+		if(xmlElementPersistedMap.get(id).equals(Boolean.FALSE)){
+			return false;
+		}
+		return true;
+	}
+
+	private void setNodeProperties(String[] elementSplit, Node node) {
+		Label label = DynamicLabel.label(elementSplit[1]);
+		boolean isParent = isElementParent(elementSplit);
+		if(isParent){
 			node.addLabel(Neo4jHelper.XmlLabels.PARENT);
 		}
 		node.addLabel(Neo4jHelper.XmlLabels.NODE);
 		node.addLabel(label);
-		node.setProperty(XmlElements.VALUE.getValue(), element.getTagValue());
+		node.setProperty(XmlElements.VALUE.getValue(), elementSplit[2]);
+		node.setProperty(XmlElements.PARENT.getValue(), elementSplit[5]);
+		node.setProperty(XmlElements.ID.getValue(), elementSplit[0]);
+		node.setProperty(XmlElements.ATTRIBUTES.getValue(), elementSplit[3]);
+/*		node.setProperty(XmlElements.VALUE.getValue(), element.getTagValue());
 		node.setProperty(XmlElements.PARENT.getValue(), element.getParentId());
 		node.setProperty(XmlElements.ID.getValue(), element.getHierarchyIdentifier().getId());
-		node.setProperty(XmlElements.ATTRIBUTES.getValue(), element.getAtrributeString());
+		node.setProperty(XmlElements.ATTRIBUTES.getValue(), element.getAtrributeString());*/
+	}
+
+	private Boolean isElementParent(String[] elementSplit) {
+		return elementSplit[4].equals("true")? Boolean.TRUE : Boolean.FALSE;
 	}
 	
-	public void writeRelationships(List<XmlElement> elements){
-		GraphDatabaseService graphDb = Neo4jDatabaseHandler.getGraphDatabase();
-		LOGGER.info("Creating Relationships for "+elements.size()+" nodes");
-		int count = 0;
-		List<List<XmlElement>> slicedList = sliceList(elements);
-		for (List<XmlElement> slicedElement : slicedList) {
-			try ( Transaction tx = graphDb.beginTx() ){
-				for (XmlElement element : slicedElement) {
-					count++;
-					LOGGER.info("Processing "+count+" out of "+elements.size());
-					if(!element.isParent()){
-						Node node = graphDb.findNodesByLabelAndProperty(Neo4jHelper.XmlLabels.NODE, XmlElements.ID.getValue(), element.getHierarchyIdentifier().getId()).iterator().next();
-						Node parentNode = graphDb.findNodesByLabelAndProperty(Neo4jHelper.XmlLabels.NODE, XmlElements.ID.getValue(), element.getParentId()).iterator().next();
-						node.createRelationshipTo(parentNode, Neo4jHelper.RelationshipTypes.CHILD_OF);
-					}
-
-				}
-				tx.success();
-			}
-			
-		}
-		
-		LOGGER.info("Completed creating Relationships");
-		
-	}
-
-	private List<List<XmlElement>> sliceList(Collection<XmlElement> elements) {
-		List<List<XmlElement>> slicedList = new ArrayList<List<XmlElement>>();
-		List<XmlElement> elementsList = new ArrayList<XmlElement>(elements);
+	private List<List<String>> sliceList(Collection<String> elements) {
+		List<List<String>> slicedList = new ArrayList<List<String>>();
+		List<String> elementsList = new ArrayList<String>(elements);
 		int totalElements = elements.size();
 		
 		for (int i = 0; i < totalElements; i=i+50000) {

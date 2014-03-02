@@ -27,12 +27,12 @@ public class CompareXml {
 		initProperties();
 		SaxParser parser = new SaxParser();
 		
-		File xmlFile = new File("/home/nikhil/dev/xml-sample/simple-tiny.xml");
+		File xmlFile = new File("/home/nikhil/dev/xml-sample/discogs_20130801_labels.xml");
 		parser.parse(xmlFile );
-		
+
 	}
 
-	private static void initProperties() {
+	public static void initProperties() {
 //TODO clean up method body
 		Properties prop = new Properties();
 		InputStream input = null;
@@ -44,7 +44,6 @@ public class CompareXml {
 			prop.load(input);
 			Neo4jHelper.neo4jLocation = prop.getProperty("db.location");
 			// get the property value and print it out
-;
 	 
 		} catch (IOException ex) {
 			ex.printStackTrace();

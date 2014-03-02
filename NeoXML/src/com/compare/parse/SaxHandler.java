@@ -1,8 +1,6 @@
 package com.compare.parse;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.logging.Logger;
@@ -21,8 +19,9 @@ public class SaxHandler extends DefaultHandler{
 	private final static Logger LOGGER = Logger.getLogger(SaxHandler.class.getName());
 	private int depth;
 	private int width;
+	private int count;
 	
-	private Map<Integer,XmlElement> elementsMap = new HashMap<Integer,XmlElement>();
+	private Map<Integer,String> elementsMap = new HashMap<Integer,String>();
 	
 	
 	@Override
@@ -48,12 +47,29 @@ public class SaxHandler extends DefaultHandler{
 			parentId =0;
 		}			
 		element.setParentId(parentId);
-		
-		this.elementsMap.put(element.getHierarchyIdentifier().getId(), element);
+		String elementString = prepareStringFromElement(element);
+		this.elementsMap.put(element.getHierarchyIdentifier().getId(), elementString);
+		//this.elementsMap.put(element.getHierarchyIdentifier().getId(), element);
+		LOGGER.info("Writing element to map "+ count);
+		count++;
 		//LOGGER.info("Popping from Stack : " + element.getTagName());
 		this.depth--;
 		this.width++;
 		super.endElement(uri, localName, qName);
+	}
+
+	private String prepareStringFromElement(XmlElement element) {
+		String separator = "~";
+/*		0 - id
+		1 - tagName
+		2 - tagValue
+		3 - attributeString
+		4 - isParent
+		5 - parentId*/
+		
+		return element.getHierarchyIdentifier().getId() + separator + element.getTagName() + separator 
+				+ element.getTagValue() + separator + element.getAtrributeString() + separator 
+				+ element.isParent() + separator + element.getParentId();
 	}
 
 	@Override
@@ -77,10 +93,10 @@ public class SaxHandler extends DefaultHandler{
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {		
 		super.characters(ch, start, length);
-		XmlElement element = XmlParseStack.getStack().pop();
+/*		XmlElement element = XmlParseStack.getStack().pop();
 		String tagValue = new String(ch, start, length);
 		element.setTagValue(tagValue);
-		XmlParseStack.getStack().push(element);
+		XmlParseStack.getStack().push(element);*/
 	}
 
 	private XmlElement createElement(String localName, String qName,
