@@ -1,6 +1,8 @@
 package com.compare.parse;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.logging.Logger;
@@ -21,7 +23,7 @@ public class SaxHandler extends DefaultHandler{
 	private int width;
 	private int count;
 	
-	private Map<Integer,String> elementsMap = new HashMap<Integer,String>();
+	private List<XmlElement> elementsMap = new ArrayList<>();
 	
 	
 	@Override
@@ -47,8 +49,7 @@ public class SaxHandler extends DefaultHandler{
 			parentId =0;
 		}			
 		element.setParentId(parentId);
-		String elementString = prepareStringFromElement(element);
-		this.elementsMap.put(element.getHierarchyIdentifier().getId(), elementString);
+		this.elementsMap.add(element);
 		//this.elementsMap.put(element.getHierarchyIdentifier().getId(), element);
 		LOGGER.info("Writing element to map "+ count);
 		count++;
@@ -58,19 +59,19 @@ public class SaxHandler extends DefaultHandler{
 		super.endElement(uri, localName, qName);
 	}
 
-	private String prepareStringFromElement(XmlElement element) {
+/*	private String prepareStringFromElement(XmlElement element) {
 		String separator = "~";
-/*		0 - id
+		0 - id
 		1 - tagName
 		2 - tagValue
 		3 - attributeString
 		4 - isParent
-		5 - parentId*/
+		5 - parentId
 		
 		return element.getHierarchyIdentifier().getId() + separator + element.getTagName() + separator 
 				+ element.getTagValue() + separator + element.getAtrributeString() + separator 
 				+ element.isParent() + separator + element.getParentId();
-	}
+	}*/
 
 	@Override
 	public void startDocument() throws SAXException {
