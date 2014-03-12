@@ -2,7 +2,7 @@ package com.compare.parse.component;
 
 import java.util.HashMap;
 import java.util.Map;
-
+//TODO This should implement an interface
 public class XmlElement {
 
 	private String tagName;

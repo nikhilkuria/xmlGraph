@@ -110,8 +110,8 @@ public class GraphWriter {
 		List<String> elementsList = new ArrayList<String>(elements);
 		int totalElements = elements.size();
 		
-		for (int i = 0; i < totalElements; i=i+50000) {
-			int upperBoundry = i+50000;
+		for (int i = 0; i < totalElements; i=i+5000) {
+			int upperBoundry = i+5000;
 			if(upperBoundry>totalElements){
 				upperBoundry = totalElements;
 			}

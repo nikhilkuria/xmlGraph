@@ -1,4 +1,4 @@
-package com.test.performace;
+/*package com.test.performace;
 
 import java.io.File;
 
@@ -26,3 +26,4 @@ public class CompareXmlTest {
 	
 	
 }
+*/
