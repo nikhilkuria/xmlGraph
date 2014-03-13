@@ -23,7 +23,7 @@ public class SaxHandler extends DefaultHandler{
 	private int width;
 	private int count;
 	
-	private List<XmlElement> elementsMap = new ArrayList<>();
+	private Map<Integer,XmlElement> elementsMap = new HashMap<>();
 	
 	
 	@Override
@@ -49,7 +49,7 @@ public class SaxHandler extends DefaultHandler{
 			parentId =0;
 		}			
 		element.setParentId(parentId);
-		this.elementsMap.add(element);
+		this.elementsMap.put(element.getHierarchyIdentifier().getId(),element);
 		//this.elementsMap.put(element.getHierarchyIdentifier().getId(), element);
 		LOGGER.info("Writing element to map "+ count);
 		count++;

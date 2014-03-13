@@ -20,14 +20,15 @@ public class GraphWriter {
 	
 	private final static Logger LOGGER = Logger.getLogger(SaxHandler.class.getName());
 	
-	public void writeXmlElements(List<XmlElement> elementsList){
+	public void writeXmlElements(Map<Integer, XmlElement> elementsMap){
 		int count = 0;
 		GraphDatabaseService graphDb = Neo4jDatabaseHandler.getGraphDatabase();
-		int size = elementsList.size();
+		int size = elementsMap.size();
+		List<XmlElement> elements = new ArrayList<>(elementsMap.values()) ;
 		//TODO purpose is lost if this map grows to a monster
 		Map<Integer,Long> xmlElementMapping = new HashMap<Integer, Long>();
 		Map<Integer,Boolean> xmlElementPersistedMap = new HashMap<Integer,Boolean>();
-		List<List<XmlElement>> slicedList = sliceList(elementsList);
+		List<List<XmlElement>> slicedList = sliceList(elements);
 		LOGGER.info("Sliced into "+ slicedList.size()+" pieces");
 		for (List<XmlElement> slicedElement : slicedList) {
 			try ( Transaction tx = graphDb.beginTx() )
@@ -45,7 +46,7 @@ public class GraphWriter {
 						setNodeProperties(element, node);
 						if (!element.isParent()) {
 							Node parentNode;
-							XmlElement parentElement = elementsList.get(element.getParentId());
+							XmlElement parentElement = elementsMap.get(element.getParentId());
 							int parentId = parentElement.getHierarchyIdentifier().getId();
 							if(isElementPersisted(xmlElementPersistedMap, parentId)){
 								LOGGER.info("Already persisted...");
