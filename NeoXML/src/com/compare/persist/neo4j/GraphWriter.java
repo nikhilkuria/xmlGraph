@@ -25,7 +25,6 @@ public class GraphWriter {
 		GraphDatabaseService graphDb = Neo4jDatabaseHandler.getGraphDatabase();
 		int size = elementsMap.size();
 		List<XmlElement> elements = new ArrayList<>(elementsMap.values()) ;
-		//TODO purpose is lost if this map grows to a monster
 		Map<Integer,Long> xmlElementMapping = new HashMap<Integer, Long>();
 		Map<Integer,Boolean> xmlElementPersistedMap = new HashMap<Integer,Boolean>();
 		List<List<XmlElement>> slicedList = sliceList(elements);
@@ -40,8 +39,6 @@ public class GraphWriter {
 						LOGGER.info("Processing " + count + " out of " + size);
 						Node node = graphDb.createNode();
 						xmlElementMapping.put(elementId, node.getId());
-						/*mapElement
-								.setPersisted(true);*/
 						xmlElementPersistedMap.put(elementId, true);
 						setNodeProperties(element, node);
 						if (!element.isParent()) {
@@ -63,6 +60,7 @@ public class GraphWriter {
 					}				    
 				}
 				tx.success();
+				//TODO bad code monkey.. add a catch block here
 			}
 		}
 		
@@ -91,14 +89,6 @@ public class GraphWriter {
 		node.setProperty(XmlElements.PARENT.getValue(), element.getParentId());
 		node.setProperty(XmlElements.ID.getValue(), element.getHierarchyIdentifier().getId());
 		node.setProperty(XmlElements.ATTRIBUTES.getValue(), element.getAtrributeString());
-/*		node.setProperty(XmlElements.VALUE.getValue(), element.getTagValue());
-		node.setProperty(XmlElements.PARENT.getValue(), element.getParentId());
-		node.setProperty(XmlElements.ID.getValue(), element.getHierarchyIdentifier().getId());
-		node.setProperty(XmlElements.ATTRIBUTES.getValue(), element.getAtrributeString());*/
-	}
-
-	private Boolean isElementParent(String[] elementSplit) {
-		return elementSplit[4].equals("true")? Boolean.TRUE : Boolean.FALSE;
 	}
 	
 	private List<List<XmlElement>> sliceList(List<XmlElement> elements) {

@@ -2,9 +2,16 @@ package com.compare.parse.component;
 
 import java.util.HashMap;
 import java.util.Map;
-//TODO This should implement an interface
+import java.util.logging.Logger;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
 public class XmlElement {
 
+	private final static Logger LOGGER = Logger.getLogger(XmlElement.class.getName());
+	
 	private String tagName;
 	private String tagValue;
 	private Map<String, String> attributes = new HashMap<String,String>();
@@ -46,7 +53,14 @@ public class XmlElement {
 		this.parentId = parentId;
 	}
 	public String getAtrributeString(){
-		return this.attributes.toString();
+		ObjectMapper jsonMapper = new ObjectMapper();
+		try {
+			return jsonMapper.writeValueAsString(this.attributes);
+		} catch (JsonProcessingException e) {
+			LOGGER.severe(e.getMessage());
+			e.printStackTrace();
+		}
+			return null;
 	}
 	public boolean isParent(){
 		return getParentId() == 0?true :false;

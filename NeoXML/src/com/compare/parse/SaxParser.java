@@ -2,6 +2,7 @@ package com.compare.parse;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -11,6 +12,8 @@ import org.xml.sax.SAXException;
 
 public class SaxParser {
 
+	private final static Logger LOGGER = Logger.getLogger(SaxParser.class.getName());
+	
 	public void parse(File xmlFile){
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SaxHandler handler = new SaxHandler();
@@ -18,10 +21,10 @@ public class SaxParser {
 			SAXParser saxParser = factory.newSAXParser();
 			saxParser.parse(xmlFile, handler);
 		} catch (ParserConfigurationException | SAXException e) {
-			// TODO Auto-generated catch block
+			LOGGER.severe(e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			LOGGER.severe(e.getMessage());
 			e.printStackTrace();
 		}
 	}

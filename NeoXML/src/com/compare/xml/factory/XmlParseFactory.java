@@ -15,7 +15,7 @@ public class XmlParseFactory {
 
 	SaxParser parser;
 	
-	public XmlParseFactory(Path configFilePath){
+	public static void initialize(Path configFilePath){
 		Properties prop = new Properties();
 		try(InputStream input = Files.newInputStream(configFilePath, StandardOpenOption.READ)) { 
 			prop.load(input);
@@ -24,9 +24,12 @@ public class XmlParseFactory {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} 
-		
-		parser = new SaxParser();
-	 
+	
+	}
+	
+	public XmlParseFactory(Path configFilePath){
+		XmlParseFactory.initialize(configFilePath);
+		parser = new SaxParser();	 
 	}
 	
 	public boolean convertXmlToGraph(Path xmlPath){

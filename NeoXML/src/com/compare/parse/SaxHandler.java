@@ -1,8 +1,6 @@
 package com.compare.parse;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.logging.Logger;
@@ -105,7 +103,6 @@ public class SaxHandler extends DefaultHandler{
 		XmlElement element = new XmlElement();
 		Map<String, String> attributeMap = new HashMap<String,String>();
 		HierarchyIdentifier hierarchyIdentifier = new HierarchyIdentifier();
-		//TODO do we need a hierarchy identifier
 		hierarchyIdentifier.setDepth(depth);
 		hierarchyIdentifier.setWidth(width);
 		hierarchyIdentifier.setId(ParseHelper.getId());

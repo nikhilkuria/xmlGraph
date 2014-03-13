@@ -6,7 +6,7 @@ import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-// TODO copied code from vogella.. Must customize
+// copied code from vogella.. Admitted
 //This custom formatter formats parts of a log record to a single line
 class HtmlFormatter extends Formatter {
   // This method is called for every log records
