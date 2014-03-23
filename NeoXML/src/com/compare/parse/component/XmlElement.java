@@ -71,6 +71,9 @@ public class XmlElement {
 	public void setPersisted(boolean persisted) {
 		this.persisted = persisted;
 	}
+	public int getId(){
+		return this.hierarchyIdentifier.getId();
+	}
 	
 	
 }
