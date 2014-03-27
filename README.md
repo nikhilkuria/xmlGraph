@@ -1,4 +1,4 @@
 xmlCompare
 ==========
 
-Breathtaking tool for xml comparision
+Breathtaking tool for super huge xml file using neo4j graph
