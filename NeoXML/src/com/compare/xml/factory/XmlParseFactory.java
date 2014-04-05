@@ -24,7 +24,7 @@ public class XmlParseFactory {
 		try(InputStream input = Files.newInputStream(configFilePath, StandardOpenOption.READ)) { 
 			neo4jConfig = MapUtil.load( input );
 			prop.load(input);
-			Neo4jHelper.neo4jLocation = prop.getProperty("db.location");
+			Neo4jHelper.neo4jLocation = neo4jConfig.get("db.location");
 			// get the property value and print it out	 
 		} catch (IOException ex) {
 			ex.printStackTrace();
