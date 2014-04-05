@@ -14,15 +14,18 @@ import com.compare.xml.factory.XmlParseFactory;
 
 public class XmlPersistTest {
 
-
+//In dev branch
+	@Test
 	public void testXmlPersist(){
 		Path configPath = Paths.get("neo4j.properties");
-		Path xmlPath = Paths.get("C:/Temp/allianz.xml");
-		XmlParseFactory xmlParseFactory= new XmlParseFactory(configPath );
+		//Path xmlPath = Paths.get("C:/Temp/allianz.xml");
+		//Path xmlPath = Paths.get("/home/nikhil/dev/xml-sample/discogs_20130801_labels.xml");
+		Path xmlPath = Paths.get("/home/nikhil/dev/xml-sample/simple-tiny.xml");
+		XmlParseFactory xmlParseFactory= new XmlParseFactory(configPath);
 		xmlParseFactory.convertXmlToGraph(xmlPath);
 	}
 	
-	@Test
+	//@Test
 	public void testGraphTreeService(){
 		Path configFilePath = Paths.get("neo4j.properties");
 

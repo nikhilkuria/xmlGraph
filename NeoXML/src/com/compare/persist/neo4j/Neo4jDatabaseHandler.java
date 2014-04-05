@@ -11,7 +11,7 @@ public class Neo4jDatabaseHandler {
 		
 	}
 	
-	private static String getDatabaseLocation(){
+	public static String getDatabaseLocation(){
 		return Neo4jHelper.neo4jLocation;
 	}
 	
