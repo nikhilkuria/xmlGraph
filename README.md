@@ -1,4 +1,4 @@
-xmlCompare
+xmlGraph
 ==========
 
-Breathtaking tool for super huge xml file using neo4j graph
+Breathtaking tool for visualizing xml as a graph
