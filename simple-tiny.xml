@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<breakfast_menu>
+	<food>
+		<name attr="one">Belgian Waffles</name>
+		<price>$5.95</price>
+		<description>Two of our famous Belgian Waffles with plenty of real maple syrup</description>
+		<calories>650</calories>
+	</food>
+	<food>
+		<name attr="two">Masala Dosa</name>
+		<price>$10.95</price>
+		<description>South India's famous slim pancake with mashed potatoes</description>
+		<calories>650</calories>
+		<eaten>
+			<fname first="nikhil"/>
+			<age>25</age>
+		</eaten>
+	</food>
+</breakfast_menu>
