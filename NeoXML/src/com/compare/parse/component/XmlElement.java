@@ -16,7 +16,7 @@ public class XmlElement {
 	private String tagValue;
 	private Map<String, String> attributes = new HashMap<String,String>();
 	private HierarchyIdentifier hierarchyIdentifier;
-	private int parentId;
+	private long parentId;
 	private boolean persisted;
 	
 	public String getTagName() {
@@ -46,10 +46,10 @@ public class XmlElement {
 	public void setHierarchyIdentifier(HierarchyIdentifier hierarchyIdentifier) {
 		this.hierarchyIdentifier = hierarchyIdentifier;
 	}
-	public int getParentId() {
+	public long getParentId() {
 		return parentId;
 	}
-	public void setParentId(int parentId) {
+	public void setParentId(long parentId) {
 		this.parentId = parentId;
 	}
 	public String getAtrributeString(){
@@ -63,7 +63,7 @@ public class XmlElement {
 			return null;
 	}
 	public boolean isParent(){
-		return getParentId() == 0?true :false;
+		return getParentId() == -1?true :false;
 	}
 	public boolean isPersisted() {
 		return persisted;
@@ -71,8 +71,11 @@ public class XmlElement {
 	public void setPersisted(boolean persisted) {
 		this.persisted = persisted;
 	}
-	public int getId(){
+	public long getId(){
 		return this.hierarchyIdentifier.getId();
+	}
+	public void setId(long id){
+		this.hierarchyIdentifier.setId(id);
 	}
 	
 	

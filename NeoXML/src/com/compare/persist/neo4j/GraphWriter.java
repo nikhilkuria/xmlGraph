@@ -12,10 +12,13 @@ import com.compare.xml.XmlElements;
 
 public abstract class GraphWriter {
 
-	public abstract void writeXmlElements(Map<Integer, XmlElement> elementsMap);
+	Map<Long,Long> xmlElementMapping = new HashMap<Long, Long>();
+	Map<Long,Boolean> xmlElementPersistedMap = new HashMap<Long,Boolean>();
+	
+	public abstract void writeXmlElements(Map<Long, XmlElement> elementsMap);
 	
 	public boolean isElementPersisted(
-			Map<Integer, Boolean> xmlElementPersistedMap, int id) {
+			Map<Long, Boolean> xmlElementPersistedMap, long id) {
 		if(xmlElementPersistedMap.get(id)==null){
 			return false;
 		}

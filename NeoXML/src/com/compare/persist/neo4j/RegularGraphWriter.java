@@ -21,21 +21,21 @@ public class RegularGraphWriter extends GraphWriter {
 	
 	private final static Logger LOGGER = Logger.getLogger(SaxHandler.class.getName());
 	
-	public void writeXmlElements(Map<Integer, XmlElement> elementsMap){
+	public void writeXmlElements(Map<Long, XmlElement> elementsMap){
 		LocalCacheManager cacheManager = new LocalCacheManager();
 		int count = 0;
 		GraphDatabaseService graphDb = Neo4jDatabaseHandler.getGraphDatabase();
 		int size = elementsMap.size();
 		List<XmlElement> elements = new ArrayList<>(elementsMap.values()) ;
-		Map<Integer,Long> xmlElementMapping = new HashMap<Integer, Long>();
-		Map<Integer,Boolean> xmlElementPersistedMap = new HashMap<Integer,Boolean>();
+		Map<Long,Long> xmlElementMapping = new HashMap<>();
+		Map<Long,Boolean> xmlElementPersistedMap = new HashMap<>();
 		List<List<XmlElement>> slicedList = cacheManager.sliceList(elements);
 		LOGGER.info("Sliced into "+ slicedList.size()+" pieces");
 		for (List<XmlElement> slicedElement : slicedList) {
 			try ( Transaction tx = graphDb.beginTx() )
 			{		
 				for (XmlElement element : slicedElement) {	
-					int elementId = element.getHierarchyIdentifier().getId();
+					long elementId = element.getHierarchyIdentifier().getId();
 					if (!isElementPersisted(xmlElementPersistedMap, elementId)  ) {
 						count++;
 						LOGGER.info("Processing " + count + " out of " + size);
@@ -46,7 +46,7 @@ public class RegularGraphWriter extends GraphWriter {
 						if (!element.isParent()) {
 							Node parentNode;
 							XmlElement parentElement = elementsMap.get(element.getParentId());
-							int parentId = parentElement.getHierarchyIdentifier().getId();
+							long parentId = parentElement.getHierarchyIdentifier().getId();
 							if(isElementPersisted(xmlElementPersistedMap, parentId)){
 								LOGGER.info("Already persisted...");
 								

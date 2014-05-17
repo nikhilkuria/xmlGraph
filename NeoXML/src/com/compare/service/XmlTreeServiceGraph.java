@@ -66,6 +66,7 @@ public class XmlTreeServiceGraph implements XmlTreeService {
 
 		try(Transaction tx = graphDb.beginTx()) {
 			Node node = graphDb.getNodeById(parent.getId());
+			XmlElement parentNode = getXmlElement(node);
 			Iterable<Relationship> childRelations = node.getRelationships(Direction.OUTGOING);
 			Iterator<Relationship> relationshipIterator = childRelations.iterator();
 			while(relationshipIterator.hasNext()) {

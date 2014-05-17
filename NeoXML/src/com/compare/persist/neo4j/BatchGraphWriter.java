@@ -17,9 +17,9 @@ public class BatchGraphWriter extends GraphWriter {
 
 	private final static Logger LOGGER = Logger.getLogger(BatchGraphWriter.class.getName());
 
-	List<Integer> persistedElementsList = new ArrayList<>();
+	List<Long> persistedElementsList = new ArrayList<>();
 	@Override
-	public void writeXmlElements(Map<Integer, XmlElement> elementsMap) {
+	public void writeXmlElements(Map<Long, XmlElement> elementsMap) {
 		//TODO currently assuming the datastore exists
 		String storeDir = Neo4jDatabaseHandler.getDatabaseLocation();
 		
@@ -55,7 +55,7 @@ public class BatchGraphWriter extends GraphWriter {
 	}
 
 
-	private boolean isParentPersisted(int parentId) {
+	private boolean isParentPersisted(long parentId) {
 		return persistedElementsList.contains(parentId)? true : false ;
 	}
 

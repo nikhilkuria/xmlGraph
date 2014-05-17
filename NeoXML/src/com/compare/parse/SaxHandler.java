@@ -21,7 +21,7 @@ public class SaxHandler extends DefaultHandler{
 	private int width;
 	private int count;
 	
-	private Map<Integer,XmlElement> elementsMap = new HashMap<>();
+	private Map<Long,XmlElement> elementsMap = new HashMap<>();
 	
 	
 	@Override
@@ -37,14 +37,14 @@ public class SaxHandler extends DefaultHandler{
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		Stack<XmlElement> stack = XmlParseStack.getStack();
-		int parentId;
+		long parentId;
 		XmlElement element = stack.pop();
 		if(!stack.isEmpty()){
 			XmlElement parentElement = stack.pop();
 			parentId = parentElement.getHierarchyIdentifier().getId();
 			stack.push(parentElement);
 		}else{
-			parentId =0;
+			parentId =-1;
 		}			
 		element.setParentId(parentId);
 		this.elementsMap.put(element.getHierarchyIdentifier().getId(),element);

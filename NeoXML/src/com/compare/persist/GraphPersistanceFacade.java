@@ -8,7 +8,7 @@ import com.compare.persist.neo4j.MinimalGraphWriter;
 
 public class GraphPersistanceFacade {
 
-	public void saveXmlElements(Map<Integer, XmlElement> elementsMap){
+	public void saveXmlElements(Map<Long, XmlElement> elementsMap){
 		//RegularGraphWriter writer = new RegularGraphWriter();
 		GraphWriter writer = new MinimalGraphWriter();
 		writer.writeXmlElements(elementsMap);
