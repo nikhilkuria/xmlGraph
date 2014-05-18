@@ -92,10 +92,10 @@ public class SaxHandler extends DefaultHandler{
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {		
 		super.characters(ch, start, length);
-/*		XmlElement element = XmlParseStack.getStack().pop();
+		XmlElement element = XmlParseStack.getStack().pop();
 		String tagValue = new String(ch, start, length);
 		element.setTagValue(tagValue);
-		XmlParseStack.getStack().push(element);*/
+		XmlParseStack.getStack().push(element);
 	}
 
 	private XmlElement createElement(String localName, String qName,

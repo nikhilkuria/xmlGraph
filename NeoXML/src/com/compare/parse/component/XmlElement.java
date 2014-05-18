@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.compare.parse.ParseHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -63,7 +64,7 @@ public class XmlElement {
 			return null;
 	}
 	public boolean isParent(){
-		return getParentId() == -1?true :false;
+		return getParentId() == ParseHelper.ROOT_ELEMENT_ID?true :false;
 	}
 	public boolean isPersisted() {
 		return persisted;
@@ -76,6 +77,17 @@ public class XmlElement {
 	}
 	public void setId(long id){
 		this.hierarchyIdentifier.setId(id);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        XmlElement compareElement = (XmlElement)obj;
+        return this.getId()==compareElement.getId();
 	}
 	
 	

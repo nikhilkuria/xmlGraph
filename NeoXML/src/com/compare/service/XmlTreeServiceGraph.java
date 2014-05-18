@@ -66,8 +66,7 @@ public class XmlTreeServiceGraph implements XmlTreeService {
 
 		try(Transaction tx = graphDb.beginTx()) {
 			Node node = graphDb.getNodeById(parent.getId());
-			XmlElement parentNode = getXmlElement(node);
-			Iterable<Relationship> childRelations = node.getRelationships(Direction.OUTGOING);
+			Iterable<Relationship> childRelations = node.getRelationships(Direction.INCOMING);
 			Iterator<Relationship> relationshipIterator = childRelations.iterator();
 			while(relationshipIterator.hasNext()) {
 				Relationship relationship = relationshipIterator.next();
@@ -86,28 +85,29 @@ public class XmlTreeServiceGraph implements XmlTreeService {
 	@Override
 	public XmlElement getParent(XmlElement child) {
 		GraphDatabaseService graphDb = Neo4jDatabaseHandler.getGraphDatabase();
-		List<XmlElement> parentElementList = new ArrayList<>();
-
+		XmlElement parentElement = null;
 		try(Transaction tx = graphDb.beginTx()) {
 			Iterable<Relationship> parentRelations = graphDb.getNodeById(
 					child.getId()).getRelationships(Direction.OUTGOING);
-			for (Relationship relationship : parentRelations) {
-				Node childNode = relationship.getEndNode();
-				XmlElement childElement = getXmlElement(childNode);
-				parentElementList.add(childElement);
-			}
+			
+			Iterator<Relationship> relationshipIterator = parentRelations.iterator();
+			Relationship relationship = relationshipIterator.next();
+			Node parentNode = relationship.getEndNode();
+			parentElement = getXmlElement(parentNode);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return parentElementList.get(0);
+		return parentElement;
 	}
 
 	@Override
 	public List<XmlElement> getSiblings(XmlElement element) {
-		// TODO Auto-generated method stub
-		return null;
+		XmlElement parentElement = getParent(element);
+		List<XmlElement> siblingElements = getChildren(parentElement);
+		siblingElements.remove(element);
+		return siblingElements;
 	}
 
 	private GlobalGraphOperations getGlobalGraphOperations() {
@@ -122,9 +122,9 @@ public class XmlTreeServiceGraph implements XmlTreeService {
 		element.setTagName((String) node.getProperty(XmlElements.TAG.getValue()));
 		element.setTagValue((String) node.getProperty(XmlElements.VALUE
 				.getValue()));
-		element.setParentId((int) node.getProperty(XmlElements.PARENT
+		element.setParentId((long) node.getProperty(XmlElements.PARENT
 				.getValue()));
-		hierarchyIdentifier.setId((int) node.getProperty(XmlElements.ID
+		hierarchyIdentifier.setId((long) node.getProperty(XmlElements.ID
 				.getValue()));
 		element.setHierarchyIdentifier(hierarchyIdentifier);
 		String attributeJSONString = (String) node
