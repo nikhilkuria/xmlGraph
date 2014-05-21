@@ -19,9 +19,7 @@ public class MinimalGraphWriter extends GraphWriter{
 					long elementId = element.getId();
 					if (!isElementPersisted(xmlElementPersistedMap, elementId)  ) {
 						Node node = graphDb.createNode();
-						xmlElementMapping.put(elementId, node.getId());
-						element.getHierarchyIdentifier().setId(node.getId());
-						xmlElementPersistedMap.put(elementId, true);
+						updateMetaDataMaps(element, node);
 						setNodeProperties(element, node);
 						if (!element.isParent()) {
 							Node parentNode;

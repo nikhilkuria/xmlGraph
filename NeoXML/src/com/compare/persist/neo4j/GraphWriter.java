@@ -52,4 +52,11 @@ public abstract class GraphWriter {
 		properties.put(XmlElements.ATTRIBUTES.getValue(), element.getAtrributeString());
 		return properties;
 	}
+	
+	public void updateMetaDataMaps(XmlElement element, Node node) {
+		long elementId = element.getId();
+		xmlElementMapping.put(elementId, node.getId());
+		element.getHierarchyIdentifier().setId(node.getId());
+		xmlElementPersistedMap.put(elementId, true);
+	}
 }
