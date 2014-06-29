@@ -18,9 +18,9 @@ public class MinimalGraphWriter extends GraphWriter{
 				for (XmlElement element : elementsMap.values()) {	
 					long elementId = element.getId();
 					if (!isElementPersisted(xmlElementPersistedMap, elementId)  ) {
-						Node node = graphDb.createNode();
-						updateMetaDataMaps(element, node);
-						setNodeProperties(element, node);
+						Node childNode = graphDb.createNode();
+						updateMetaDataMaps(element, childNode);
+						setNodeProperties(element, childNode);
 						if (!element.isParent()) {
 							Node parentNode;
 							XmlElement parentElement = elementsMap.get(element.getParentId());
@@ -32,8 +32,7 @@ public class MinimalGraphWriter extends GraphWriter{
 							}
 							
 							setNodeProperties(parentElement, parentNode);
-							node.createRelationshipTo(parentNode,
-									Neo4jHelper.RelationshipTypes.CHILD_OF);
+							createRelationship(childNode, parentNode, element.getTagName());
 						}
 					}				    
 				}

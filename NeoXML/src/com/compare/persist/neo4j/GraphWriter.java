@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.neo4j.graphdb.DynamicLabel;
+import org.neo4j.graphdb.DynamicRelationshipType;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.RelationshipType;
 
 import com.compare.parse.component.XmlElement;
 import com.compare.xml.XmlElements;
@@ -58,5 +60,11 @@ public abstract class GraphWriter {
 		xmlElementMapping.put(elementId, node.getId());
 		element.getHierarchyIdentifier().setId(node.getId());
 		xmlElementPersistedMap.put(elementId, true);
+	}
+	
+
+	public void createRelationship(Node childNode, Node parentNode, String relationshipName) {
+		RelationshipType relationship = DynamicRelationshipType.withName(relationshipName);
+		parentNode.createRelationshipTo(childNode, relationship );
 	}
 }

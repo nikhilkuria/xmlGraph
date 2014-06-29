@@ -16,17 +16,16 @@ import com.compare.xml.factory.XmlParseFactory;
 public class XmlPersistTest {
 
 //In dev branch
-	//@Test
+	@Test
 	public void testXmlPersist(){
 		Path configPath = Paths.get("neo4j.properties");
 		//Path xmlPath = Paths.get("C:/Nikhil/sc/books.xml");
 		//Path xmlPath = Paths.get("/home/nikhil/dev/xml-sample/discogs_20130801_labels.xml");
-		Path xmlPath = Paths.get("/home/nikhil/dev/xml-sample/simple-tiny.xml");
+		Path xmlPath = Paths.get("/home/nikhil/dev/xml-sample/books-tiny.xml");
 		XmlParseFactory xmlParseFactory= new XmlParseFactory(configPath);
 		xmlParseFactory.convertXmlToGraph(xmlPath);
 	}
 	
-	@Test
 	public void testGraphTreeService(){
 		Path configFilePath = Paths.get("neo4j.properties");
 
@@ -35,13 +34,13 @@ public class XmlPersistTest {
 		
 		XmlTreeServiceGraph treeServiceGraph = new XmlTreeServiceGraph(graphDb);
 		System.out.println("-----Test for DOM like methods on XmlGraph----\n");
-		List<XmlElement> groupElements = treeServiceGraph.getTags("food");
-		System.out.println("Fetching all Food Elements...");
+		List<XmlElement> groupElements = treeServiceGraph.getTags("book");
+		System.out.println("Fetching all Book Nodes...");
 		for (XmlElement xmlElement : groupElements) {
 			System.out.println(xmlElement.getAtrributeString());
 		}
 		XmlElement firstElement = groupElements.get(0);
-		System.out.println("\nFetching children of the first food element : " + firstElement.getAtrributeString() + "...");
+		System.out.println("\nFetching children of the first Book Node : " + firstElement.getAtrributeString() + "...");
 		List<XmlElement> childrenElements = treeServiceGraph.getChildren(firstElement);
 		for (XmlElement xmlElement : childrenElements) {
 			System.out.println(xmlElement.getTagName()+ " : " + xmlElement.getTagValue());
@@ -51,7 +50,7 @@ public class XmlPersistTest {
 		XmlElement parentElement = treeServiceGraph.getParent(child);
 		System.out.println(parentElement.getTagName() + " : " + parentElement.getAtrributeString());
 		
-		System.out.println("\nFetching siblings of the first food element : " + firstElement.getAttributes());
+		System.out.println("\nFetching siblings of the first Book Node : " + firstElement.getAttributes());
 		List<XmlElement> elementSibling = treeServiceGraph.getSiblings(firstElement);
 		for (XmlElement xmlElement : elementSibling) {
 			System.out.println(xmlElement.getTagName() + " : " + xmlElement.getAtrributeString());
