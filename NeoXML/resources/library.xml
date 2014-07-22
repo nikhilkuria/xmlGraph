@@ -1,0 +1,11 @@
+<library>
+<author firstname = "Earnest" lastname = "Hemingway">
+    <book name="A Farewell to Arms" year="1929"/>
+    <book name="For Whom the bell tolls" year="1940"/>
+    <book name="The Old man and the sea" year="1951"/>
+</author>
+<author firstname = "Victor" lastname = "Hugo">
+    <book name="The Hunchback of Notre-Dame" year="1831"/>
+    <book name="Les Misérables" year="1862"/>
+</author>
+</library>
