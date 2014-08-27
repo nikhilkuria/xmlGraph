@@ -41,7 +41,10 @@ public abstract class GraphWriter {
 		node.setProperty(XmlElements.VALUE.getValue(), element.getTagValue());
 		node.setProperty(XmlElements.PARENT.getValue(), element.getParentId());
 		node.setProperty(XmlElements.ID.getValue(), element.getHierarchyIdentifier().getId());
-		node.setProperty(XmlElements.ATTRIBUTES.getValue(), element.getAtrributeString());
+		//node.setProperty(XmlElements.ATTRIBUTES.getValue(), element.getAtrributeString());
+		for (String attributeName : element.getAttributes().keySet()) {
+			node.setProperty(attributeName, element.getAttributes().get(attributeName));
+		}
 		node.setProperty(XmlElements.TAG.getValue(), element.getTagName());
 	}
 	
