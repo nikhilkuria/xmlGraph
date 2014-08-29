@@ -60,8 +60,9 @@ public abstract class GraphWriter {
 	
 	public void updateMetaDataMaps(XmlElement element, Node node) {
 		long elementId = element.getId();
-		xmlElementMapping.put(elementId, node.getId());
-		element.getHierarchyIdentifier().setId(node.getId());
+		long nodeId = node.getId();
+		xmlElementMapping.put(elementId, nodeId);
+		//element.getHierarchyIdentifier().setId(nodeId);
 		xmlElementPersistedMap.put(elementId, true);
 	}
 	

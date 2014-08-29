@@ -19,9 +19,9 @@ public class XmlPersistTest {
 	@Test
 	public void testXmlPersist(){
 		Path configPath = Paths.get("neo4j.properties");
-		//Path xmlPath = Paths.get("C:/Nikhil/sc/books.xml");
+		Path xmlPath = Paths.get("C:/Temp/allianz-s.xml");
 		//Path xmlPath = Paths.get("/home/nikhil/dev/xml-sample/discogs_20130801_labels.xml");
-		Path xmlPath = Paths.get("/home/nikhil/dev/xml-sample/books-tiny.xml");
+		//Path xmlPath = Paths.get("/home/nikhil/dev/xml-sample/books-tiny.xml");
 		XmlParseFactory xmlParseFactory= new XmlParseFactory(configPath);
 		xmlParseFactory.convertXmlToGraph(xmlPath);
 	}
