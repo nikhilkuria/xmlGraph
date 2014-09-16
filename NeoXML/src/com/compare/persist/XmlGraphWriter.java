@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import com.compare.util.objects.WritableObject;
 import com.compare.xml.factory.XmlParseFactory;
 
-public class XmlGraphWriter implements Writer{
+public class XmlGraphWriter implements GraphDbWriter{
 
 	XmlParseFactory xmlParseFactory;
 	
@@ -16,9 +16,9 @@ public class XmlGraphWriter implements Writer{
 	}
 	
 	@Override
-	public void write(WritableObject writableObject) {
+	public void write(WritableObject writableObject,PersistanceConfig config) {
 		Path xmlPath = writableObject.getPath();;
-		xmlParseFactory.convertXmlToGraph(xmlPath );
+		xmlParseFactory.convertXmlToGraph(xmlPath,config);
 	}
 
 }

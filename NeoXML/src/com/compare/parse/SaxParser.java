@@ -10,13 +10,16 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
 
+import com.compare.persist.PersistanceConfig;
+
 public class SaxParser {
 
 	private final static Logger LOGGER = Logger.getLogger(SaxParser.class.getName());
 	
-	public void parse(File xmlFile){
+	public void parse(File xmlFile, PersistanceConfig config){
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SaxHandler handler = new SaxHandler();
+		handler.setConfig(config);
 		try {
 			SAXParser saxParser = factory.newSAXParser();
 			saxParser.parse(xmlFile, handler);

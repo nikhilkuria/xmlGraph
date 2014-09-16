@@ -13,6 +13,8 @@ import com.compare.parse.component.HierarchyIdentifier;
 import com.compare.parse.component.XmlElement;
 import com.compare.parse.component.XmlParseStack;
 import com.compare.persist.GraphPersistanceFacade;
+import com.compare.persist.PersistanceConfig;
+import com.compare.util.XmlPersistanceHelper;
 
 public class SaxHandler extends DefaultHandler{
 
@@ -21,6 +23,7 @@ public class SaxHandler extends DefaultHandler{
 	private int width;
 	private int count;
 	
+	private PersistanceConfig config;
 	private Map<Long,XmlElement> elementsMap = new HashMap<>();
 	
 	
@@ -48,10 +51,8 @@ public class SaxHandler extends DefaultHandler{
 		}			
 		element.setParentId(parentId);
 		this.elementsMap.put(element.getHierarchyIdentifier().getId(),element);
-		//this.elementsMap.put(element.getHierarchyIdentifier().getId(), element);
 		LOGGER.info("Writing element to map "+ count);
 		count++;
-		//LOGGER.info("Popping from Stack : " + element.getTagName());
 		this.depth--;
 		this.width++;
 		super.endElement(uri, localName, qName);
@@ -106,6 +107,9 @@ public class SaxHandler extends DefaultHandler{
 		hierarchyIdentifier.setDepth(depth);
 		hierarchyIdentifier.setWidth(width);
 		hierarchyIdentifier.setId(ParseHelper.getId());
+		if(config.isIgnoreNamespace()){
+			qName = XmlPersistanceHelper.removeNamespace(qName);
+		}
 		element.setTagName(qName);
 		for (int i = 0; i < attributes.getLength(); i++) {
 			attributeMap.put(attributes.getQName(i), attributes.getValue(i));
@@ -113,6 +117,14 @@ public class SaxHandler extends DefaultHandler{
 		element.setAttributes(attributeMap );
 		element.setHierarchyIdentifier(hierarchyIdentifier);
 		return element;
+	}
+
+	public PersistanceConfig getConfig() {
+		return config;
+	}
+
+	public void setConfig(PersistanceConfig config) {
+		this.config = config;
 	}
 	
 	

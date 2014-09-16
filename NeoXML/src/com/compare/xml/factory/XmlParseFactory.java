@@ -12,6 +12,7 @@ import java.util.Properties;
 import org.neo4j.helpers.collection.MapUtil;
 
 import com.compare.parse.SaxParser;
+import com.compare.persist.PersistanceConfig;
 import com.compare.persist.neo4j.Neo4jHelper;
 
 public class XmlParseFactory {
@@ -37,9 +38,9 @@ public class XmlParseFactory {
 		parser = new SaxParser();	 
 	}
 	
-	public boolean convertXmlToGraph(Path xmlPath){
+	public boolean convertXmlToGraph(Path xmlPath, PersistanceConfig config){
 		File xmlFile = xmlPath.toFile();
-		parser.parse(xmlFile);
+		parser.parse(xmlFile,config);
 		return true;
 	}
 	
