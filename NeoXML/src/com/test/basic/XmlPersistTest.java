@@ -2,15 +2,18 @@ package com.test.basic;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 import org.neo4j.graphdb.GraphDatabaseService;
 
 import com.compare.parse.component.XmlElement;
+import com.compare.persist.Writer;
+import com.compare.persist.XmlGraphWriter;
 import com.compare.persist.neo4j.Neo4jDatabaseHandler;
 import com.compare.service.XmlTreeServiceGraph;
+import com.compare.util.objects.WritableObject;
+import com.compare.util.objects.XmlObject;
 import com.compare.xml.factory.XmlParseFactory;
 
 public class XmlPersistTest {
@@ -18,12 +21,16 @@ public class XmlPersistTest {
 //In dev branch
 	@Test
 	public void testXmlPersist(){
-		Path configPath = Paths.get("neo4j.properties");
-		Path xmlPath = Paths.get("C:/Temp/allianz-s.xml");
+/*		Path configPath = Paths.get("neo4j.properties");
+		//Path xmlPath = Paths.get("C:/Temp/allianz-s.xml");
 		//Path xmlPath = Paths.get("/home/nikhil/dev/xml-sample/discogs_20130801_labels.xml");
-		//Path xmlPath = Paths.get("/home/nikhil/dev/xml-sample/books-tiny.xml");
+		Path xmlPath = Paths.get("/home/nikhil/dev/xml-sample/SampleCompany-xbrl.xml");
 		XmlParseFactory xmlParseFactory= new XmlParseFactory(configPath);
-		xmlParseFactory.convertXmlToGraph(xmlPath);
+		xmlParseFactory.convertXmlToGraph(xmlPath);*/
+		Path xmlPath = Paths.get("/home/nikhil/dev/xml-sample/SampleCompany-xbrl.xml");
+		WritableObject xmlObject = new XmlObject(xmlPath);
+		Writer xmlWriter = new XmlGraphWriter();
+		xmlWriter.write(xmlObject);
 	}
 	
 	public void testGraphTreeService(){
